@@ -115,7 +115,7 @@
                 function generarPuntoAleatorio(min, max) {
                     min = Math.ceil(min);
                     max = Math.floor(max);
-                    
+
                     return Math.random() * (max - min) + min;
                 }
 
@@ -183,23 +183,25 @@
                             raices.push(raiz);
                         }
                     }
-                    
+
                     //NUEVO ALGORITMO!!
                     if (raices.length > 0) {
                         raices.forEach(raiz => {
-                            if (math.evaluate(segundaDerivada, { x: raiz }).toString() < 0) {
-                                max.push(math.evaluate(y, { x: raiz }).toString());
+                            if (raiz >= a && raiz <= b) {
+                                if (math.evaluate(segundaDerivada, { x: raiz }).toString() < 0) {
+                                    max.push(math.evaluate(y, { x: raiz }).toString());
+                                }
+                                if (math.evaluate(segundaDerivada, { x: raiz }).toString() > 0) {
+                                    console.log({ raiz, y })
+                                    min.push(math.evaluate(y, { x: raiz }).toString());
+                                }
                             }
-                            if (math.evaluate(segundaDerivada, { x: raiz }).toString() > 0) {
-                                min.push(math.evaluate(y, { x: raiz }).toString());
-                            }
-
                         })
                     }
 
                     ymax = Math.max.apply(Math, max);
                     ymin = Math.min.apply(Math, min);
-
+                    console.log({ max, min })
                     console.log({ a, b, ymin, ymax })
 
                     //Definimos los contadores de los disparos totales y los disparos en el área definida
@@ -214,10 +216,13 @@
                     while (disparosTotales < disparos) {
                         let puntoX = generarPuntoAleatorio(a, b);
                         let puntoY = generarPuntoAleatorio(parseFloat(ymin), parseFloat(ymax));
-                        
-                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)
-                            || (parseFloat(math.evaluate(y, { x: puntoX }).toString()) < parseFloat(puntoY) && parseFloat(puntoY) < 0)) {
+
+                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)) {
                             disparosEnArea++;
+                        }
+
+                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) < parseFloat(puntoY) && parseFloat(puntoY) < 0)) {
+                            disparosEnArea--;
                         }
 
                         puntosX.push(puntoX);

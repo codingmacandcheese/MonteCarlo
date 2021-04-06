@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Método de Montecarlo: Área</title>
+    <title>Método de Montecarlo: Integrales Definidas</title>
 
     <style type="text/css">
         h1 {
@@ -82,7 +82,7 @@
     </div>
 
     <!-- Title -->
-    <h1>Estimación de Área mediante el Método de Monte Carlo</h1>
+    <h1>Estimación de Integrales Definidas mediante el Método de Monte Carlo</h1>
 
     <!-- Instrucciones -->
     <p>En este aplicativo nos permitirá calcular integrales definidas por el Método de Monte Carlo.</p>
@@ -111,10 +111,11 @@
     <div id='myDiv'>
         <script type="text/javascript">
             window.onload = function () {
-                //Definimos una función para generar los puntos aleatorios que se dispararán (teniendo en cuenta los límites del cuadrado)
+                //Definimos una función para generar los puntos aleatorios que se dispararán (teniendo en cuenta los límites del rectangulo)
                 function generarPuntoAleatorio(min, max) {
                     min = Math.ceil(min);
                     max = Math.floor(max);
+                    
                     return Math.random() * (max - min) + min;
                 }
 
@@ -131,6 +132,7 @@
                         imagenFuncionDerivadaEnValorInicial = math.evaluate(funcionDerivada, { x: valorInicial }).toString();
 
                         if (Math.abs(imagenFuncionDerivadaEnValorInicial) <= epsilon * Math.abs(imagenFuncionEnValorInicial)) {
+                            console.log('Not Convergent')
                             return false;
                         }
 
@@ -142,7 +144,6 @@
 
                         valorInicial = raiz;
                     }
-
                     return false;
                 }
 
@@ -153,39 +154,53 @@
                     let b = document.getElementById("b").value;
                     let disparos = document.getElementById("disparos").value;
 
-                    //Definimos el límite superior e inferior de nuestro cuadrado aplicando el Algoritmo de Newton-Raphson
+                    //Definimos el límite superior e inferior de nuestro rectangulo aplicando el Algoritmo de Newton-Raphson
                     let ymin;
                     let ymax;
                     let raices = [];
+                    let max = [];
+                    let min = [];
 
                     let primeraDerivada = math.derivative(y, 'x').toString();
                     let segundaDerivada = math.derivative(primeraDerivada, 'x').toString();
 
+                    let imagenEnA = math.evaluate(y, { x: a }).toString();
+                    let imagenEnB = math.evaluate(y, { x: b }).toString();
+
+                    max.push(imagenEnA);
+                    max.push(imagenEnB);
+                    max.push(0);
+
+                    min.push(imagenEnA);
+                    min.push(imagenEnB);
+                    min.push(0);
+
+                    //Intervalo cada (b-a)/100
                     for (var i = a; i <= b; i++) {
                         let raiz = newtonraphson(primeraDerivada, segundaDerivada, i);
 
                         if (raiz !== false && raices.find(element => element == raiz) === undefined) {
                             raices.push(raiz);
-                            console.log({ raices })
                         }
                     }
-
-                    raices.forEach(raiz => {
-                        if (math.evaluate(segundaDerivada, { x: raiz }).toString() < 0 && (raiz > a && raiz < b)) {
-                            ymax = math.evaluate(y, { x: raiz }).toString();
-                        } else {
-                            ymin = math.evaluate(y, { x: raiz }).toString();
-
-                            let imagenEnA = math.evaluate(y, { x: a }).toString();
-                            let imagenEnB = math.evaluate(y, { x: b }).toString();
-
-                            if (Math.abs(imagenEnA) > Math.abs(imagenEnB)) {
-                                ymax = imagenEnA;
-                            } else {
-                                ymax = imagenEnB;
+                    
+                    //NUEVO ALGORITMO!!
+                    if (raices.length > 0) {
+                        raices.forEach(raiz => {
+                            if (math.evaluate(segundaDerivada, { x: raiz }).toString() < 0) {
+                                max.push(math.evaluate(y, { x: raiz }).toString());
                             }
-                        }
-                    });
+                            if (math.evaluate(segundaDerivada, { x: raiz }).toString() > 0) {
+                                min.push(math.evaluate(y, { x: raiz }).toString());
+                            }
+
+                        })
+                    }
+
+                    ymax = Math.max.apply(Math, max);
+                    ymin = Math.min.apply(Math, min);
+
+                    console.log({ a, b, ymin, ymax })
 
                     //Definimos los contadores de los disparos totales y los disparos en el área definida
                     let disparosTotales = 0;
@@ -198,11 +213,12 @@
                     //Definimos un ciclo para cada disparo
                     while (disparosTotales < disparos) {
                         let puntoX = generarPuntoAleatorio(a, b);
-                        let puntoY = generarPuntoAleatorio(ymin, ymax);
-
-                        if ((parseFloat(puntoY) > 0 && parseFloat(puntoY) < parseFloat(math.evaluate(y, { x: puntoX }).toString()))
-                            || (parseFloat(puntoY) <= 0 && parseFloat(puntoY) > parseFloat(math.evaluate(y, { x: puntoX }).toString())))
+                        let puntoY = generarPuntoAleatorio(parseFloat(ymin), parseFloat(ymax));
+                        
+                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)
+                            || (parseFloat(math.evaluate(y, { x: puntoX }).toString()) < parseFloat(puntoY) && parseFloat(puntoY) < 0)) {
                             disparosEnArea++;
+                        }
 
                         puntosX.push(puntoX);
                         puntosY.push(puntoY);
@@ -220,8 +236,6 @@
                     function getAreaMonteCarlo() {
                         return areaBajoLaCurva;
                     }
-                    console.log({ areaBajoLaCurva });
-                    
 
                     //Realizamos el gráfico de la solución
                     var layout = {
@@ -283,7 +297,7 @@
         </script>
     </div>
 
-    <p>La estimación de área bajo la curva por el método de Monte Carlo es de <span id="area"></span>
+    <p>La estimación de la integral definida por el método de Monte Carlo es de <span id="area"></span>
     </p>
 
     <!-- Footer -->

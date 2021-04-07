@@ -113,10 +113,8 @@
             window.onload = function () {
                 //Definimos una función para generar los puntos aleatorios que se dispararán (teniendo en cuenta los límites del rectangulo)
                 function generarPuntoAleatorio(min, max) {
-                    min = Math.ceil(min);
-                    max = Math.floor(max);
-
-                    return Math.random() * (max - min) + min;
+                    random = parseFloat(Math.random() * (max - min) + min).toFixed(4);
+                    return random;
                 }
 
                 //Definimos el Algoritmo de Newton-Rapson

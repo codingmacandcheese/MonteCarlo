@@ -73,6 +73,8 @@
     <!-- Plotly.js file -->
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.18/chance.min.js"></script>
+
 </head>
 
 <body>
@@ -114,6 +116,7 @@
                 //Definimos una función para generar los puntos aleatorios que se dispararán (teniendo en cuenta los límites del rectangulo)
                 function generarPuntoAleatorio(min, max) {
                     random = parseFloat(Math.random() * (max - min) + min).toFixed(4);
+                    
                     return random;
                 }
 
@@ -182,7 +185,6 @@
                         }
                     }
 
-                    //NUEVO ALGORITMO!!
                     if (raices.length > 0) {
                         raices.forEach(raiz => {
                             if (raiz >= a && raiz <= b) {
@@ -190,7 +192,6 @@
                                     max.push(math.evaluate(y, { x: raiz }).toString());
                                 }
                                 if (math.evaluate(segundaDerivada, { x: raiz }).toString() > 0) {
-                                    console.log({ raiz, y })
                                     min.push(math.evaluate(y, { x: raiz }).toString());
                                 }
                             }
@@ -199,8 +200,6 @@
 
                     ymax = Math.max.apply(Math, max);
                     ymin = Math.min.apply(Math, min);
-                    console.log({ max, min })
-                    console.log({ a, b, ymin, ymax })
 
                     //Definimos los contadores de los disparos totales y los disparos en el área definida
                     let disparosTotales = 0;
@@ -212,7 +211,9 @@
 
                     //Definimos un ciclo para cada disparo
                     while (disparosTotales < disparos) {
-                        let puntoX = generarPuntoAleatorio(a, b);
+                        //let puntoX = chance.floating({ min: a, max: b });
+                        //let puntoY = chance.floating({ min: ymin, max: ymax });
+                        let puntoX = generarPuntoAleatorio(parseFloat(a), parseFloat(b));
                         let puntoY = generarPuntoAleatorio(parseFloat(ymin), parseFloat(ymax));
 
                         if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)) {

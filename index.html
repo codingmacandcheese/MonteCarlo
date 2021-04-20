@@ -176,10 +176,9 @@
                     min.push(imagenEnB);
                     min.push(0);
 
-                    //Intervalo cada (b-a)/100
-                    for (var i = a; i <= b; i++) {
+                    for (var i = a; parseFloat(i) <= parseFloat(b); i++) {
                         let raiz = newtonraphson(primeraDerivada, segundaDerivada, i);
-
+                        
                         if (raiz !== false && raices.find(element => element == raiz) === undefined) {
                             raices.push(raiz);
                         }

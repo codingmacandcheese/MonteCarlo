@@ -228,7 +228,7 @@
                     }
 
                     //Calculamos el área del cuadrado
-                    let areaCuadrado = parseFloat((parseFloat(b) - parseFloat(a))) * parseFloat((parseFloat(ymin) - parseFloat(ymax)));
+                    let areaCuadrado = (parseFloat(b) - parseFloat(a)) * (parseFloat(ymax) - parseFloat(ymin));
 
                     //Obtenemos el área mediante el método de Monte Carlo
                     let areaBajoLaCurva = (parseFloat(disparosEnArea) / disparosTotales) * parseFloat(areaCuadrado);

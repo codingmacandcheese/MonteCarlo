@@ -186,12 +186,12 @@
 
                     if (raices.length > 0) {
                         raices.forEach(raiz => {
-                            if (raiz >= a && raiz <= b) {
-                                if (math.evaluate(segundaDerivada, { x: raiz }).toString() < 0) {
-                                    max.push(math.evaluate(y, { x: raiz }).toString());
+                            if (parseFloat(raiz) >= parseFloat(a) && parseFloat(raiz) <= parseFloat(b)) {
+                                if (math.evaluate(segundaDerivada, { x: parseFloat(raiz) }).toString() < 0) {
+                                    max.push(math.evaluate(y, { x: parseFloat(raiz) }).toString());
                                 }
-                                if (math.evaluate(segundaDerivada, { x: raiz }).toString() > 0) {
-                                    min.push(math.evaluate(y, { x: raiz }).toString());
+                                if (math.evaluate(segundaDerivada, { x: parseFloat(raiz) }).toString() > 0) {
+                                    min.push(math.evaluate(y, { x: parseFloat(raiz) }).toString());
                                 }
                             }
                         })
@@ -213,11 +213,11 @@
                         let puntoX = generarPuntoAleatorio(parseFloat(a), parseFloat(b));
                         let puntoY = generarPuntoAleatorio(parseFloat(ymin), parseFloat(ymax));
 
-                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)) {
+                        if ((parseFloat(math.evaluate(y, { x: parseFloat(puntoX) }).toString()) > parseFloat(puntoY) && parseFloat(puntoY) > 0)) {
                             disparosEnArea++;
                         }
 
-                        if ((parseFloat(math.evaluate(y, { x: puntoX }).toString()) < parseFloat(puntoY) && parseFloat(puntoY) < 0)) {
+                        if ((parseFloat(math.evaluate(y, { x: parseFloat(puntoX) }).toString()) < parseFloat(puntoY) && parseFloat(puntoY) < 0)) {
                             disparosEnArea--;
                         }
 
@@ -228,10 +228,10 @@
                     }
 
                     //Calculamos el área del cuadrado
-                    let areaCuadrado = (b - a) * ymax;
+                    let areaCuadrado = parseFloat((parseFloat(b) - parseFloat(a))) * parseFloat((parseFloat(ymin) - parseFloat(ymax)));
 
                     //Obtenemos el área mediante el método de Monte Carlo
-                    let areaBajoLaCurva = (disparosEnArea / disparosTotales) * areaCuadrado;
+                    let areaBajoLaCurva = (parseFloat(disparosEnArea) / disparosTotales) * parseFloat(areaCuadrado);
 
                     //Realizamos una funcion para obtener el valor del área
                     function getAreaMonteCarlo() {

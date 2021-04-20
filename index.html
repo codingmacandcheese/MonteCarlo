@@ -227,15 +227,15 @@
                         disparosTotales++;
                     }
 
-                    //Calculamos el área del cuadrado
-                    let areaCuadrado = (parseFloat(b) - parseFloat(a)) * (parseFloat(ymax) - parseFloat(ymin));
+                    //Calculamos el área del rectangulo
+                    let areaRectangulo = (parseFloat(b) - parseFloat(a)) * (parseFloat(ymax) - parseFloat(ymin));
 
                     //Obtenemos el área mediante el método de Monte Carlo
-                    let areaBajoLaCurva = (parseFloat(disparosEnArea) / disparosTotales) * parseFloat(areaCuadrado);
+                    let estimacionIntegral = (parseFloat(disparosEnArea) / disparosTotales) * parseFloat(areaRectangulo);
 
-                    //Realizamos una funcion para obtener el valor del área
-                    function getAreaMonteCarlo() {
-                        return areaBajoLaCurva;
+                    //Realizamos una funcion para obtener el valor de la integral
+                    function getMonteCarlo() {
+                        return estimacionIntegral;
                     }
 
                     //Realizamos el gráfico de la solución
@@ -282,7 +282,7 @@
                     var data = [funcion, puntos];
 
                     Plotly.newPlot('myDiv', data, layout);
-                    document.getElementById('area').innerHTML = getAreaMonteCarlo();
+                    document.getElementById('area').innerHTML = getMonteCarlo();
                 }
 
 
